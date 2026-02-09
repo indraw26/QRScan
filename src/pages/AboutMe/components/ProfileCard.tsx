@@ -4,11 +4,11 @@ const ProfileCard = () => {
   return (
     <div className="flex flex-col items-center gap-5 px-5 animate-fade-in">
       {/* Avatar */}
-      <div className="relative mt-4">
-        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center border border-border">
+      <div className="relative mt-4 animate-scale-in">
+        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/20 via-primary/10 to-primary/5 flex items-center justify-center border border-primary/20">
           <span className="text-2xl font-bold text-primary">QR</span>
         </div>
-        <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+        <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-primary flex items-center justify-center animate-pulse">
           <Heart className="w-3 h-3 text-primary-foreground" fill="currentColor" />
         </div>
       </div>
@@ -27,10 +27,10 @@ const ProfileCard = () => {
       <div className="w-full max-w-[300px] space-y-2">
         <a
           href="#"
-          className="glass-card flex items-center gap-3 !p-3 hover:bg-surface-hover"
+          className="glass-card flex items-center gap-3 !p-3 hover:bg-surface-hover hover:scale-[1.02] transition-all animate-stagger-1"
         >
-          <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
-            <Github className="w-4 h-4 text-foreground" />
+          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+            <Github className="w-4 h-4 text-primary" />
           </div>
           <div className="flex-1">
             <p className="text-xs font-medium text-foreground">Source Code</p>
@@ -40,10 +40,10 @@ const ProfileCard = () => {
 
         <a
           href="#"
-          className="glass-card flex items-center gap-3 !p-3 hover:bg-surface-hover"
+          className="glass-card flex items-center gap-3 !p-3 hover:bg-surface-hover hover:scale-[1.02] transition-all animate-stagger-2"
         >
-          <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
-            <Twitter className="w-4 h-4 text-foreground" />
+          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+            <Twitter className="w-4 h-4 text-primary" />
           </div>
           <div className="flex-1">
             <p className="text-xs font-medium text-foreground">Follow Updates</p>
@@ -53,10 +53,10 @@ const ProfileCard = () => {
 
         <a
           href="#"
-          className="glass-card flex items-center gap-3 !p-3 hover:bg-surface-hover"
+          className="glass-card flex items-center gap-3 !p-3 hover:bg-surface-hover hover:scale-[1.02] transition-all animate-stagger-3"
         >
-          <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
-            <Globe className="w-4 h-4 text-foreground" />
+          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+            <Globe className="w-4 h-4 text-primary" />
           </div>
           <div className="flex-1">
             <p className="text-xs font-medium text-foreground">Website</p>

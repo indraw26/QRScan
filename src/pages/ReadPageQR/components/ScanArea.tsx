@@ -81,7 +81,7 @@ const ScanArea = () => {
       {scanState === "done" ? (
         <button
           onClick={handleReset}
-          className="w-full max-w-[280px] flex items-center justify-center gap-2 h-12 rounded-xl bg-secondary text-secondary-foreground text-sm font-medium hover:bg-surface-hover transition-all animate-fade-in"
+          className="w-full max-w-[280px] flex items-center justify-center gap-2 h-12 rounded-xl bg-primary/10 text-primary border border-primary/30 text-sm font-medium hover:bg-primary/20 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/10 transition-all animate-fade-in cursor-pointer"
         >
           <ScanLine className="w-4 h-4" />
           Scan Again
@@ -90,7 +90,7 @@ const ScanArea = () => {
         <button
           onClick={handleScan}
           disabled={scanState === "scanning"}
-          className="w-full max-w-[280px] flex items-center justify-center gap-2 h-12 rounded-xl bg-primary text-primary-foreground text-sm font-medium glow-button hover:opacity-90 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+          className="w-full max-w-[280px] flex items-center justify-center gap-2 h-12 rounded-xl bg-primary text-primary-foreground text-sm font-medium glow-button hover:bg-primary/90 hover:scale-[1.02] transition-all disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
         >
           {scanState === "scanning" ? (
             <>

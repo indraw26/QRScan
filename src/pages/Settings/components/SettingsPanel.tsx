@@ -10,21 +10,27 @@ interface SettingToggleProps {
 }
 
 const SettingToggle = ({ icon: Icon, label, description, enabled, onToggle }: SettingToggleProps) => (
-  <div className="glass-card flex items-center gap-3 !p-3">
-    <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
-      <Icon className="w-4 h-4 text-foreground" strokeWidth={1.5} />
+  <div className="glass-card flex items-center gap-3 !p-3 hover:scale-[1.01] transition-all cursor-pointer" onClick={onToggle}>
+    <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${enabled ? "bg-primary/15" : "bg-primary/10"}`}>
+      <Icon className="w-4 h-4 text-primary" strokeWidth={1.5} />
     </div>
     <div className="flex-1">
       <p className="text-xs font-medium text-foreground">{label}</p>
       <p className="text-[10px] text-muted-foreground">{description}</p>
     </div>
     <button
-      onClick={onToggle}
-      className={`relative w-10 h-[22px] rounded-full transition-colors duration-200 ${enabled ? "bg-primary" : "bg-border"
-        }`}
+      onClick={(e) => {
+        e.stopPropagation();
+        onToggle();
+      }}
+      style={{
+        backgroundColor: enabled ? 'oklch(60% 0.18 220)' : 'oklch(95% 0.01 240)',
+        boxShadow: enabled ? '0 8px 16px oklch(60% 0.18 220 / 0.3)' : 'none'
+      }}
+      className="relative w-10 h-[22px] rounded-full transition-all duration-300 cursor-pointer"
     >
       <div
-        className={`absolute top-[3px] w-4 h-4 rounded-full bg-card shadow-sm transition-transform duration-200 ${enabled ? "translate-x-[22px]" : "translate-x-[3px]"
+        className={`absolute top-[3px] w-4 h-4 rounded-full bg-white shadow-md transition-all duration-300 ${enabled ? "translate-x-[22px] scale-110" : "translate-x-[3px]"
           }`}
       />
     </button>
@@ -39,37 +45,45 @@ const SettingsPanel = () => {
 
   return (
     <div className="px-5 space-y-2 animate-fade-in">
-      <SettingToggle
-        icon={Moon}
-        label="Dark Mode"
-        description="Toggle dark appearance"
-        enabled={darkMode}
-        onToggle={() => setDarkMode(!darkMode)}
-      />
+      <div className="animate-stagger-1">
+        <SettingToggle
+          icon={Moon}
+          label="Dark Mode"
+          description="Toggle dark appearance"
+          enabled={darkMode}
+          onToggle={() => setDarkMode(!darkMode)}
+        />
+      </div>
 
-      <SettingToggle
-        icon={Bell}
-        label="Notifications"
-        description="QR scan alerts"
-        enabled={notifications}
-        onToggle={() => setNotifications(!notifications)}
-      />
+      <div className="animate-stagger-2">
+        <SettingToggle
+          icon={Bell}
+          label="Notifications"
+          description="QR scan alerts"
+          enabled={notifications}
+          onToggle={() => setNotifications(!notifications)}
+        />
+      </div>
 
-      <SettingToggle
-        icon={Download}
-        label="Auto Save to History"
-        description="Save all scans automatically"
-        enabled={autoSave}
-        onToggle={() => setAutoSave(!autoSave)}
-      />
+      <div className="animate-stagger-3">
+        <SettingToggle
+          icon={Download}
+          label="Auto Save to History"
+          description="Save all scans automatically"
+          enabled={autoSave}
+          onToggle={() => setAutoSave(!autoSave)}
+        />
+      </div>
 
-      <SettingToggle
-        icon={Palette}
-        label="High Resolution Export"
-        description="1024×1024 PNG export"
-        enabled={highRes}
-        onToggle={() => setHighRes(!highRes)}
-      />
+      <div className="animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}>
+        <SettingToggle
+          icon={Palette}
+          label="High Resolution Export"
+          description="1024×1024 PNG export"
+          enabled={highRes}
+          onToggle={() => setHighRes(!highRes)}
+        />
+      </div>
 
       {/* Danger zone */}
       <div className="pt-3">
@@ -77,9 +91,9 @@ const SettingsPanel = () => {
           Data
         </p>
         <div className="space-y-2">
-          <button className="glass-card flex items-center gap-3 !p-3 w-full hover:bg-surface-hover transition-colors">
-            <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
-              <Shield className="w-4 h-4 text-foreground" strokeWidth={1.5} />
+          <button className="glass-card flex items-center gap-3 !p-3 w-full hover:bg-surface-hover hover:scale-[1.01] transition-all animate-fade-in cursor-pointer" style={{ animationDelay: '0.25s', animationFillMode: 'backwards' }}>
+            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Shield className="w-4 h-4 text-primary" strokeWidth={1.5} />
             </div>
             <div className="flex-1 text-left">
               <p className="text-xs font-medium text-foreground">Export Data</p>
@@ -87,7 +101,7 @@ const SettingsPanel = () => {
             </div>
           </button>
 
-          <button className="glass-card flex items-center gap-3 !p-3 w-full hover:bg-destructive/5 transition-colors group">
+          <button className="glass-card flex items-center gap-3 !p-3 w-full hover:bg-destructive/5 hover:scale-[1.01] transition-all group animate-fade-in cursor-pointer" style={{ animationDelay: '0.3s', animationFillMode: 'backwards' }}>
             <div className="w-8 h-8 rounded-lg bg-destructive/10 flex items-center justify-center">
               <RotateCcw className="w-4 h-4 text-destructive" strokeWidth={1.5} />
             </div>

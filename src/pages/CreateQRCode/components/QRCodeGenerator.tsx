@@ -46,18 +46,20 @@ const QRCodeGenerator = () => {
       <div className="flex justify-center pt-2">
         <div className="qr-display">
           {text ? (
-            <QRCodeSVG
-              value={text}
-              size={180}
-              level="M"
-              bgColor="transparent"
-              fgColor="hsl(220, 25%, 10%)"
-            />
+            <div className="animate-scale-in">
+              <QRCodeSVG
+                value={text}
+                size={180}
+                level="M"
+                bgColor="transparent"
+                fgColor="hsl(220, 25%, 10%)"
+              />
+            </div>
           ) : (
             <div className="w-[180px] h-[180px] flex items-center justify-center">
               <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-muted flex items-center justify-center">
-                  <svg className="w-8 h-8 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <div className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-primary/10 flex items-center justify-center">
+                  <svg className="w-8 h-8 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                     <rect x="3" y="3" width="7" height="7" rx="1" />
                     <rect x="14" y="3" width="7" height="7" rx="1" />
                     <rect x="3" y="14" width="7" height="7" rx="1" />
@@ -89,17 +91,17 @@ const QRCodeGenerator = () => {
 
       {/* Actions */}
       {text && (
-        <div className="flex gap-3 px-5 animate-fade-in">
+        <div className="flex gap-3 px-5">
           <button
             onClick={handleCopy}
-            className="flex-1 flex items-center justify-center gap-2 h-11 rounded-xl bg-secondary text-secondary-foreground text-sm font-medium hover:bg-surface-hover transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 h-11 rounded-xl bg-primary/10 text-primary border border-primary/30 text-sm font-medium hover:bg-primary/20 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/10 transition-all animate-stagger-1 cursor-pointer"
           >
             {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
             {copied ? "Copied!" : "Copy Text"}
           </button>
           <button
             onClick={handleDownload}
-            className="flex-1 flex items-center justify-center gap-2 h-11 rounded-xl bg-primary text-primary-foreground text-sm font-medium glow-button hover:opacity-90 transition-all"
+            className="flex-1 flex items-center justify-center gap-2 h-11 rounded-xl bg-primary text-primary-foreground text-sm font-medium glow-button hover:bg-primary/90 hover:scale-[1.02] transition-all animate-stagger-2 cursor-pointer"
           >
             <Download className="w-4 h-4" />
             Download

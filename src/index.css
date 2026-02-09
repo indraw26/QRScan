@@ -31,7 +31,7 @@
   --color-popover: oklch(100% 0 0);
   --color-popover-foreground: oklch(20% 0.02 240);
 
-  --color-primary: oklch(55% 0.15 200);
+  --color-primary: oklch(60% 0.18 220);
   --color-primary-foreground: oklch(100% 0 0);
 
   --color-secondary: oklch(92% 0.01 240);
@@ -40,7 +40,7 @@
   --color-muted: oklch(95% 0.01 240);
   --color-muted-foreground: oklch(60% 0.01 240);
 
-  --color-accent: oklch(55% 0.15 200);
+  --color-accent: oklch(60% 0.18 220);
   --color-accent-foreground: oklch(100% 0 0);
 
   --color-destructive: oklch(60% 0.18 25);
@@ -48,13 +48,13 @@
 
   --color-border: oklch(90% 0.01 240);
   --color-input: oklch(90% 0.01 240);
-  --color-ring: oklch(55% 0.15 200);
+  --color-ring: oklch(60% 0.18 220);
 
   /* Custom surface colors */
   --color-surface: oklch(99% 0.005 240);
   --color-surface-hover: oklch(95% 0.01 240);
   --color-surface-active: oklch(94% 0.05 200);
-  --color-glow: oklch(55% 0.15 200);
+  --color-glow: oklch(60% 0.18 220);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -68,7 +68,7 @@
     --color-popover: oklch(100% 0 0);
     --color-popover-foreground: oklch(20% 0.02 240);
 
-    --color-primary: oklch(55% 0.15 200);
+    --color-primary: oklch(60% 0.18 220);
     --color-primary-foreground: oklch(100% 0 0);
 
     --color-secondary: oklch(92% 0.01 240);
@@ -77,7 +77,7 @@
     --color-muted: oklch(95% 0.01 240);
     --color-muted-foreground: oklch(60% 0.01 240);
 
-    --color-accent: oklch(55% 0.15 200);
+    --color-accent: oklch(60% 0.18 220);
     --color-accent-foreground: oklch(100% 0 0);
 
     --color-destructive: oklch(60% 0.18 25);
@@ -85,12 +85,12 @@
 
     --color-border: oklch(90% 0.01 240);
     --color-input: oklch(90% 0.01 240);
-    --color-ring: oklch(55% 0.15 200);
+    --color-ring: oklch(60% 0.18 220);
 
     --color-surface: oklch(99% 0.005 240);
     --color-surface-hover: oklch(95% 0.01 240);
     --color-surface-active: oklch(94% 0.05 200);
-    --color-glow: oklch(55% 0.15 200);
+    --color-glow: oklch(60% 0.18 220);
   }
 }
 
@@ -232,6 +232,80 @@ body {
   }
 }
 
+@keyframes scanLine {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(200px);
+  }
+}
+
+@keyframes scanProgress {
+  0% {
+    width: 0%;
+  }
+
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes pingSlow {
+
+  75%,
+  100% {
+    transform: scale(1.1);
+    opacity: 0;
+  }
+}
+
+@keyframes pingSlower {
+
+  75%,
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+@keyframes stagger1 {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes stagger2 {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes stagger3 {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .animate-fade-in {
   animation: fadeIn 0.3s ease-out;
 }
@@ -246,6 +320,34 @@ body {
 
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-scan-line {
+  animation: scanLine 2s ease-in-out infinite;
+}
+
+.animate-scan-progress {
+  animation: scanProgress 3s ease-out forwards;
+}
+
+.animate-ping-slow {
+  animation: pingSlow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.animate-ping-slower {
+  animation: pingSlower 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.animate-stagger-1 {
+  animation: stagger1 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.05s backwards;
+}
+
+.animate-stagger-2 {
+  animation: stagger2 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
+}
+
+.animate-stagger-3 {
+  animation: stagger3 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.15s backwards;
 }
 
 /* Smooth transitions for all interactive elements */

@@ -49,17 +49,22 @@ const HistoryList = () => {
         </div>
       ) : (
         <div className="space-y-2">
-          {mockHistory.map((item) => (
+          {mockHistory.map((item, index) => (
             <div
               key={item.id}
-              className="glass-card flex items-center gap-3 group"
+              className={`glass-card flex items-center gap-3 group hover:scale-[1.01] hover:shadow-md transition-all ${index === 0 ? 'animate-stagger-1' :
+                index === 1 ? 'animate-stagger-2' :
+                  index === 2 ? 'animate-stagger-3' :
+                    'animate-fade-in'
+                }`}
+              style={index > 2 ? { animationDelay: `${0.15 + (index - 2) * 0.05}s`, animationFillMode: 'backwards' } : undefined}
             >
-              <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${item.type === "created" ? "bg-surface-active" : "bg-muted"
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${item.type === "created" ? "bg-primary/10" : "bg-primary/5"
                 }`}>
                 {item.type === "created" ? (
-                  <div className="w-3 h-3 rounded-sm bg-primary/70" />
+                  <div className="w-3 h-3 rounded-sm bg-primary" />
                 ) : (
-                  <div className="w-3 h-3 rounded-full border-2 border-muted-foreground/40" />
+                  <div className="w-3 h-3 rounded-full border-2 border-primary/60" />
                 )}
               </div>
 
@@ -80,12 +85,12 @@ const HistoryList = () => {
 
               <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 {item.content.startsWith("http") && (
-                  <button className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-surface-hover transition-colors">
-                    <ExternalLink className="w-3.5 h-3.5 text-muted-foreground" />
+                  <button className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-primary/10 transition-colors cursor-pointer">
+                    <ExternalLink className="w-3.5 h-3.5 text-primary/70 hover:text-primary" />
                   </button>
                 )}
-                <button className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-destructive/10 transition-colors">
-                  <Trash2 className="w-3.5 h-3.5 text-muted-foreground hover:text-destructive" />
+                <button className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-destructive/10 transition-colors cursor-pointer">
+                  <Trash2 className="w-3.5 h-3.5 text-destructive/70 hover:text-destructive" />
                 </button>
               </div>
             </div>
