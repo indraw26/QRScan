@@ -1,147 +1,200 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
+@theme {
+  /* Border radius */
+  --radius-sm: 0.5rem;
+  --radius: 0.75rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+
+  /* Extension-specific custom properties */
+  --extension-width: 420px;
+  --extension-height: 600px;
+  --tab-bar-height: 64px;
+  --header-height: 56px;
+
+  /* Font family */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
 :root {
-  --primary-blue: #2563EB;
-  --primary-blue-light: #3B82F6;
-  --primary-blue-dark: #1D4ED8;
-  --accent-blue: #DBEAFE;
-  --bg-white: #ffffff;
-  --bg-gray-50: #F8FAFC;
-  --bg-gray-100: #E2E8F0;
-  --text-primary: #1E293B;
-  --text-secondary: #475569;
-  --text-muted: #64748B;
-  --border-color: #CBD5E1;
-  --border-light: #E2E8F0;
-  --shadow-sm: 0 1px 3px 0 rgba(37, 99, 235, 0.1);
-  --shadow-md: 0 4px 12px 0 rgba(37, 99, 235, 0.15);
-  --shadow-lg: 0 8px 24px 0 rgba(37, 99, 235, 0.2);
-  --shadow-blue: 0 4px 20px 0 rgba(37, 99, 235, 0.3);
+  /* Light mode color palette */
+  --color-background: oklch(97% 0.01 240);
+  --color-foreground: oklch(20% 0.02 240);
+
+  --color-card: oklch(100% 0 0);
+  --color-card-foreground: oklch(20% 0.02 240);
+
+  --color-popover: oklch(100% 0 0);
+  --color-popover-foreground: oklch(20% 0.02 240);
+
+  --color-primary: oklch(55% 0.15 200);
+  --color-primary-foreground: oklch(100% 0 0);
+
+  --color-secondary: oklch(92% 0.01 240);
+  --color-secondary-foreground: oklch(30% 0.02 240);
+
+  --color-muted: oklch(95% 0.01 240);
+  --color-muted-foreground: oklch(60% 0.01 240);
+
+  --color-accent: oklch(55% 0.15 200);
+  --color-accent-foreground: oklch(100% 0 0);
+
+  --color-destructive: oklch(60% 0.18 25);
+  --color-destructive-foreground: oklch(100% 0 0);
+
+  --color-border: oklch(90% 0.01 240);
+  --color-input: oklch(90% 0.01 240);
+  --color-ring: oklch(55% 0.15 200);
+
+  /* Custom surface colors */
+  --color-surface: oklch(99% 0.005 240);
+  --color-surface-hover: oklch(95% 0.01 240);
+  --color-surface-active: oklch(94% 0.05 200);
+  --color-glow: oklch(55% 0.15 200);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: oklch(100% 0 0);
+    --color-foreground: oklch(20% 0.02 240);
+
+    --color-card: oklch(100% 0 0);
+    --color-card-foreground: oklch(20% 0.02 240);
+
+    --color-popover: oklch(100% 0 0);
+    --color-popover-foreground: oklch(20% 0.02 240);
+
+    --color-primary: oklch(55% 0.15 200);
+    --color-primary-foreground: oklch(100% 0 0);
+
+    --color-secondary: oklch(92% 0.01 240);
+    --color-secondary-foreground: oklch(30% 0.02 240);
+
+    --color-muted: oklch(95% 0.01 240);
+    --color-muted-foreground: oklch(60% 0.01 240);
+
+    --color-accent: oklch(55% 0.15 200);
+    --color-accent-foreground: oklch(100% 0 0);
+
+    --color-destructive: oklch(60% 0.18 25);
+    --color-destructive-foreground: oklch(100% 0 0);
+
+    --color-border: oklch(90% 0.01 240);
+    --color-input: oklch(90% 0.01 240);
+    --color-ring: oklch(55% 0.15 200);
+
+    --color-surface: oklch(99% 0.005 240);
+    --color-surface-hover: oklch(95% 0.01 240);
+    --color-surface-active: oklch(94% 0.05 200);
+    --color-glow: oklch(55% 0.15 200);
+  }
 }
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  border-color: var(--color-border);
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #DBEAFE 0%, #EFF6FF 50%, #FFFFFF 100%);
-  color: var(--text-primary);
-  min-width: 400px;
-  min-height: 500px;
-  overflow-x: hidden;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#root {
-  width: 100%;
-  min-height: 500px;
+/* Extension container styles */
+.extension-container {
+  @apply mx-auto overflow-hidden flex flex-col;
+  background-color: var(--color-background);
+  width: var(--extension-width);
+  height: var(--extension-height);
+  border-radius: var(--radius);
+  box-shadow: 0 25px 50px -12px oklch(20% 0.02 240 / 0.25);
 }
 
-/* Card Styles */
+.extension-header {
+  @apply flex items-center justify-between px-5 border-b;
+  height: var(--header-height);
+  border-color: var(--color-border);
+}
+
+.extension-content {
+  @apply flex-1 overflow-y-auto;
+  height: calc(var(--extension-height) - var(--header-height) - var(--tab-bar-height));
+}
+
+.extension-tab-bar {
+  @apply flex items-center justify-around border-t;
+  height: var(--tab-bar-height);
+  background-color: var(--color-card);
+  border-color: var(--color-border);
+}
+
+.tab-item {
+  @apply flex flex-col items-center justify-center gap-1 py-1.5 px-2 rounded-lg transition-all duration-200 cursor-pointer;
+  color: var(--color-muted-foreground);
+}
+
+.tab-item:hover {
+  color: var(--color-foreground);
+}
+
+.tab-item.active {
+  color: var(--color-primary);
+}
+
+.tab-item.active .tab-indicator {
+  @apply opacity-100 scale-100;
+}
+
+.tab-indicator {
+  @apply w-1 h-1 rounded-full opacity-0 scale-0 transition-all duration-200;
+  background-color: var(--color-primary);
+}
+
 .glass-card {
-  background: var(--bg-white);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  box-shadow: var(--shadow-sm);
-  transition: all 0.2s ease;
+  @apply rounded-xl border p-4 transition-all duration-200;
+  border-color: var(--color-border);
+  background-color: var(--color-card);
+  box-shadow: 0 1px 3px oklch(20% 0.02 240 / 0.04);
 }
 
 .glass-card:hover {
-  box-shadow: var(--shadow-md);
-  border-color: var(--accent-blue);
+  box-shadow: 0 4px 12px oklch(20% 0.02 240 / 0.08);
 }
 
-/* Input Styles */
-.input-field {
-  width: 100%;
-  padding: 12px 16px;
-  background: var(--bg-white);
-  border: 1.5px solid var(--border-color);
-  border-radius: 8px;
-  color: var(--text-primary);
-  font-size: 14px;
-  font-weight: 400;
-  transition: all 0.2s ease;
-  outline: none;
+/* QR Code display area */
+.qr-display {
+  @apply flex items-center justify-center rounded-2xl p-6;
+  background-color: white;
+  box-shadow: 0 0 0 1px var(--color-border), 0 4px 16px oklch(20% 0.02 240 / 0.06);
 }
 
-.input-field:focus {
-  border-color: var(--primary-blue);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+/* Glow effect for primary actions */
+.glow-button {
+  box-shadow: 0 0 20px oklch(from var(--color-glow) l c h / 0.2), 0 4px 12px oklch(from var(--color-glow) l c h / 0.15);
 }
 
-.input-field::placeholder {
-  color: var(--text-muted);
-  font-weight: 400;
+.glow-button:hover {
+  box-shadow: 0 0 30px oklch(from var(--color-glow) l c h / 0.3), 0 6px 16px oklch(from var(--color-glow) l c h / 0.2);
 }
 
-/* Button Styles */
-.btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  outline: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-}
-
-.btn-primary {
-  background: var(--primary-blue);
-  color: white;
-  box-shadow: var(--shadow-sm);
-}
-
-.btn-primary:hover {
-  background: var(--primary-blue-dark);
-  box-shadow: var(--shadow-blue);
-  transform: translateY(-1px);
-}
-
-.btn-primary:active {
-  transform: translateY(0);
-}
-
-.btn-secondary {
-  background: var(--bg-white);
-  color: var(--text-secondary);
-  border: 1.5px solid var(--border-color);
-}
-
-.btn-secondary:hover {
-  background: var(--bg-gray-50);
-  border-color: var(--primary-blue);
-  color: var(--primary-blue);
-}
-
-/* QR Code Container */
-.qr-container {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  display: inline-block;
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-light);
-  transition: all 0.2s ease;
-}
-
-.qr-container:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-2px);
-}
-
-/* Animations */
+/* Smooth Animations */
 @keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
   from {
     opacity: 0;
     transform: translateY(10px);
@@ -153,15 +206,15 @@ body {
   }
 }
 
-@keyframes slideIn {
+@keyframes scaleIn {
   from {
     opacity: 0;
-    transform: translateX(-20px);
+    transform: scale(0.95);
   }
 
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: scale(1);
   }
 }
 
@@ -170,53 +223,46 @@ body {
   0%,
   100% {
     opacity: 1;
+    transform: scale(1);
   }
 
   50% {
-    opacity: 0.5;
+    opacity: 0.8;
+    transform: scale(1.05);
   }
 }
 
-.fade-in {
-  animation: fadeIn 0.5s ease-out;
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
 }
 
-.slide-in {
-  animation: slideIn 0.4s ease-out;
+.animate-slide-up {
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+.animate-scale-in {
+  animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-::-webkit-scrollbar-track {
-  background: var(--bg-gray-50);
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--border-color);
-  border-radius: 4px;
+/* Smooth transitions for all interactive elements */
+button,
+a,
+input,
+textarea,
+select {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
+/* Smooth hover transitions */
+.transition-smooth {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Utility Classes */
-.gradient-text {
-  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.text-secondary {
-  color: var(--text-secondary);
-}
-
-.divider {
-  height: 1px;
-  background: var(--border-color);
-  margin: 20px 0;
+/* Page transition wrapper */
+.page-transition {
+  animation: fadeIn 0.3s ease-out;
 }
