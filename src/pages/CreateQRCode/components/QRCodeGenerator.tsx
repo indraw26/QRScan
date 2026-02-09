@@ -1,21 +1,27 @@
 import { useState, useCallback } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import { Copy, Download, Check } from "lucide-react";
+import { Copy, Download, Check, QrCode } from "lucide-react";
 import Button from "@/commons/Button";
 
 const QRCodeGenerator = () => {
-  const [text, setText] = useState("");
+  const [inputText, setInputText] = useState("");
+  const [qrText, setQrText] = useState("");
   const [copied, setCopied] = useState(false);
 
+  const handleGenerate = useCallback(() => {
+    if (!inputText.trim()) return;
+    setQrText(inputText);
+  }, [inputText]);
+
   const handleCopy = useCallback(() => {
-    if (!text) return;
-    navigator.clipboard.writeText(text);
+    if (!qrText) return;
+    navigator.clipboard.writeText(qrText);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  }, [text]);
+  }, [qrText]);
 
   const handleDownload = useCallback(() => {
-    if (!text) return;
+    if (!qrText) return;
     const svg = document.querySelector(".qr-display svg") as SVGElement;
     if (!svg) return;
 
@@ -39,17 +45,17 @@ const QRCodeGenerator = () => {
     };
 
     img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData)));
-  }, [text]);
+  }, [qrText]);
 
   return (
     <div className="flex flex-col gap-5 animate-fade-in">
       {/* QR Preview */}
       <div className="flex justify-center pt-2">
         <div className="qr-display">
-          {text ? (
+          {qrText ? (
             <div className="animate-scale-in">
               <QRCodeSVG
-                value={text}
+                value={qrText}
                 size={180}
                 level="M"
                 bgColor="transparent"
@@ -70,7 +76,7 @@ const QRCodeGenerator = () => {
                     <rect x="18" y="18" width="3" height="3" />
                   </svg>
                 </div>
-                <p className="text-xs text-muted-foreground">Enter text to generate</p>
+                <p className="text-xs text-muted-foreground">Enter text and click Generate</p>
               </div>
             </div>
           )}
@@ -83,15 +89,31 @@ const QRCodeGenerator = () => {
           Content
         </label>
         <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
+          value={inputText}
+          onChange={(e) => setInputText(e.target.value)}
           placeholder="Enter URL, text, or any content..."
           className="w-full h-24 px-4 py-3 rounded-xl border border-input bg-surface text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-ring/30 transition-all"
         />
       </div>
 
-      {/* Actions */}
-      {text && (
+      {/* Generate Button */}
+      {!qrText && (
+        <div className="px-5">
+          <Button
+            onClick={handleGenerate}
+            disabled={!inputText.trim()}
+            variant="primary"
+            icon={QrCode}
+            fullWidth
+            className="animate-fade-in disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Generate QR Code
+          </Button>
+        </div>
+      )}
+
+      {/* Actions - only show when QR is generated */}
+      {qrText && (
         <div className="flex gap-3 px-5">
           <Button
             onClick={handleCopy}
@@ -108,6 +130,21 @@ const QRCodeGenerator = () => {
             className="animate-stagger-2"
           >
             Download
+          </Button>
+        </div>
+      )}
+
+      {/* Regenerate button when text changes */}
+      {qrText && inputText !== qrText && inputText.trim() && (
+        <div className="px-5">
+          <Button
+            onClick={handleGenerate}
+            variant="outline"
+            icon={QrCode}
+            fullWidth
+            className="animate-fade-in"
+          >
+            Regenerate QR Code
           </Button>
         </div>
       )}
