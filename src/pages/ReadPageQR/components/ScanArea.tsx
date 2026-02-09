@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ScanLine, Camera, AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
+import Button from "@/commons/Button";
 
 type ScanState = "idle" | "scanning" | "done";
 
@@ -79,31 +80,27 @@ const ScanArea = () => {
 
       {/* Scan / Reset button */}
       {scanState === "done" ? (
-        <button
+        <Button
           onClick={handleReset}
-          className="w-full max-w-[280px] flex items-center justify-center gap-2 h-12 rounded-xl bg-primary/10 text-primary border border-primary/30 text-sm font-medium hover:bg-primary/20 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/10 transition-all animate-fade-in cursor-pointer"
+          variant="secondary"
+          icon={ScanLine}
+          fullWidth
+          className="max-w-[280px] h-12 animate-fade-in"
         >
-          <ScanLine className="w-4 h-4" />
           Scan Again
-        </button>
+        </Button>
       ) : (
-        <button
+        <Button
           onClick={handleScan}
           disabled={scanState === "scanning"}
-          className="w-full max-w-[280px] flex items-center justify-center gap-2 h-12 rounded-xl bg-primary text-primary-foreground text-sm font-medium glow-button hover:bg-primary/90 hover:scale-[1.02] transition-all disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+          variant="primary"
+          icon={scanState === "scanning" ? Loader2 : ScanLine}
+          isLoading={scanState === "scanning"}
+          fullWidth
+          className="max-w-[280px] h-12 disabled:opacity-70 disabled:cursor-not-allowed"
         >
-          {scanState === "scanning" ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Scanning...
-            </>
-          ) : (
-            <>
-              <ScanLine className="w-4 h-4" />
-              Scan Current Page
-            </>
-          )}
-        </button>
+          {scanState === "scanning" ? "Scanning..." : "Scan Current Page"}
+        </Button>
       )}
 
       {/* Note */}
@@ -127,3 +124,4 @@ const ScanArea = () => {
 };
 
 export default ScanArea;
+

@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { Copy, Download, Check } from "lucide-react";
+import Button from "@/commons/Button";
 
 const QRCodeGenerator = () => {
   const [text, setText] = useState("");
@@ -92,20 +93,22 @@ const QRCodeGenerator = () => {
       {/* Actions */}
       {text && (
         <div className="flex gap-3 px-5">
-          <button
+          <Button
             onClick={handleCopy}
-            className="flex-1 flex items-center justify-center gap-2 h-11 rounded-xl bg-primary/10 text-primary border border-primary/30 text-sm font-medium hover:bg-primary/20 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/10 transition-all animate-stagger-1 cursor-pointer"
+            variant="secondary"
+            icon={copied ? Check : Copy}
+            className="animate-stagger-1"
           >
-            {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
             {copied ? "Copied!" : "Copy Text"}
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={handleDownload}
-            className="flex-1 flex items-center justify-center gap-2 h-11 rounded-xl bg-primary text-primary-foreground text-sm font-medium glow-button hover:bg-primary/90 hover:scale-[1.02] transition-all animate-stagger-2 cursor-pointer"
+            variant="primary"
+            icon={Download}
+            className="animate-stagger-2"
           >
-            <Download className="w-4 h-4" />
             Download
-          </button>
+          </Button>
         </div>
       )}
     </div>
@@ -113,3 +116,4 @@ const QRCodeGenerator = () => {
 };
 
 export default QRCodeGenerator;
+
