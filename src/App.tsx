@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { ToastProvider, ToastViewport } from "@radix-ui/react-toast";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -15,12 +15,12 @@ const App = () => (
       <TooltipProvider>
         <ToastProvider>
           <HistoryProvider>
-            <BrowserRouter>
+            <HashRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
-            </BrowserRouter>
+            </HashRouter>
             <ToastViewport />
           </HistoryProvider>
         </ToastProvider>
