@@ -9,13 +9,11 @@ interface ExtensionLayoutProps {
 
 const ExtensionLayout = ({ children, activeTab, onTabChange }: ExtensionLayoutProps) => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-muted/50 p-4">
-      <div className="extension-container">
-        <div className="extension-content">
-          {children}
-        </div>
-        <TabBar activeTab={activeTab} onTabChange={onTabChange} />
+    <div className="extension-container">
+      <div className="extension-content scrollbar-hide">
+        {children}
       </div>
+      <TabBar activeTab={activeTab} onTabChange={onTabChange} />
     </div>
   );
 };
