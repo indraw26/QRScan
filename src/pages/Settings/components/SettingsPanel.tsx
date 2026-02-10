@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Moon, Palette, Bell, Shield, Download, RotateCcw } from "lucide-react";
+import { Moon, Download } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 
 interface SettingToggleProps {
@@ -43,9 +43,7 @@ const SettingToggle = ({ icon: Icon, label, description, enabled, onToggle }: Se
 
 const SettingsPanel = () => {
   const { theme, toggleTheme } = useTheme();
-  const [notifications, setNotifications] = useState(true);
   const [autoSave, setAutoSave] = useState(true);
-  const [highRes, setHighRes] = useState(false);
 
   return (
     <div className="px-5 space-y-2 animate-fade-in">
@@ -59,16 +57,6 @@ const SettingsPanel = () => {
         />
       </div>
 
-      <div className="animate-stagger-2">
-        <SettingToggle
-          icon={Bell}
-          label="Notifications"
-          description="QR scan alerts"
-          enabled={notifications}
-          onToggle={() => setNotifications(!notifications)}
-        />
-      </div>
-
       <div className="animate-stagger-3">
         <SettingToggle
           icon={Download}
@@ -77,44 +65,6 @@ const SettingsPanel = () => {
           enabled={autoSave}
           onToggle={() => setAutoSave(!autoSave)}
         />
-      </div>
-
-      <div className="animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}>
-        <SettingToggle
-          icon={Palette}
-          label="High Resolution Export"
-          description="1024×1024 PNG export"
-          enabled={highRes}
-          onToggle={() => setHighRes(!highRes)}
-        />
-      </div>
-
-      {/* Danger zone */}
-      <div className="pt-3">
-        <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider mb-2 px-1">
-          Data
-        </p>
-        <div className="space-y-2">
-          <button className="glass-card flex items-center gap-3 !p-3 w-full hover:bg-surface-hover hover:scale-[1.01] transition-all animate-fade-in cursor-pointer" style={{ animationDelay: '0.25s', animationFillMode: 'backwards' }}>
-            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Shield className="w-4 h-4 text-primary" strokeWidth={1.5} />
-            </div>
-            <div className="flex-1 text-left">
-              <p className="text-xs font-medium text-foreground">Export Data</p>
-              <p className="text-[10px] text-muted-foreground">Download your history as JSON</p>
-            </div>
-          </button>
-
-          <button className="glass-card flex items-center gap-3 !p-3 w-full hover:bg-destructive/5 hover:scale-[1.01] transition-all group animate-fade-in cursor-pointer" style={{ animationDelay: '0.3s', animationFillMode: 'backwards' }}>
-            <div className="w-8 h-8 rounded-lg bg-destructive/10 flex items-center justify-center">
-              <RotateCcw className="w-4 h-4 text-destructive" strokeWidth={1.5} />
-            </div>
-            <div className="flex-1 text-left">
-              <p className="text-xs font-medium text-destructive">Clear All Data</p>
-              <p className="text-[10px] text-muted-foreground">Remove history and settings</p>
-            </div>
-          </button>
-        </div>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ScanLine, Camera, AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
+import { ScanLine, Camera, CheckCircle2, Loader2 } from "lucide-react";
 import Button from "@/commons/Button";
 
 type ScanState = "idle" | "scanning" | "done";
@@ -101,16 +101,6 @@ const ScanArea = () => {
         >
           {scanState === "scanning" ? "Scanning..." : "Scan Current Page"}
         </Button>
-      )}
-
-      {/* Note */}
-      {scanState === "idle" && (
-        <div className="flex items-start gap-2 px-4 py-3 rounded-xl bg-muted/50 max-w-[320px] animate-fade-in">
-          <AlertCircle className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
-          <p className="text-[11px] text-muted-foreground leading-relaxed">
-            This feature requires browser extension permissions to access page content.
-          </p>
-        </div>
       )}
 
       {/* Progress bar while scanning */}

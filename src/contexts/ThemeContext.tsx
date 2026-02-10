@@ -18,8 +18,8 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     if (stored === "light" || stored === "dark") {
       return stored;
     }
-    // Fall back to system preference
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    // Default to light mode
+    return "light";
   });
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (context === undefined) {
-    throw new Error("useTheme must be used within a ThemeProvider");
+    throw new Error("useTheme ThemeContext within a ThemeProvider");
   }
   return context;
 };

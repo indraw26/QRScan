@@ -60,9 +60,13 @@ const QRCodeGenerator = () => {
             <div className="w-[180px] h-[180px] flex items-center justify-center">
               <div className="text-center">
                 <div className="w-16 h-16 mx-auto mb-1 rounded-2xl bg-primary/10 flex items-center justify-center">
-                  <img src="/qr-icon.svg" alt="QR Icon" className="w-8 h-8 dark:invert dark:brightness-0 dark:contrast-200" />
+                  <img
+                    src="/qr-icon.svg"
+                    alt="QR Icon"
+                    className="w-8 h-8 opacity-70 dark:opacity-100 dark:invert dark:brightness-0 dark:contrast-200"
+                  />
                 </div>
-                <p className="text-xs text-muted-foreground dark:text-white">Enter text and click Generate</p>
+                <p className="text-xs text-foreground/60 dark:text-white">Enter text and click Generate</p>
               </div>
             </div>
           )}
