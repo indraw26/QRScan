@@ -21,29 +21,34 @@ const Button = ({
   const baseStyles = "flex items-center justify-center gap-2 h-11 rounded-xl text-sm font-medium transition-all cursor-pointer";
   const widthStyles = fullWidth ? "w-full" : "flex-1";
 
-  // Define vibrant colors for each variant
+  // Define vibrant colors for each variant with proper dark mode support
   const getVariantStyles = () => {
     switch (variant) {
       case "primary":
         return {
+          className: 'hover:opacity-90 hover:scale-[1.02] shadow-md hover:shadow-lg',
           style: {
-            backgroundColor: 'oklch(60% 0.18 220)', // Vibrant blue (matches theme primary)
-            color: 'white',
-          },
-          className: 'hover:opacity-90 hover:scale-[1.02] shadow-md hover:shadow-lg'
+            backgroundColor: 'var(--color-primary)',
+            color: 'var(--color-primary-foreground)'
+          }
         };
       case "secondary":
         return {
+          className: 'hover:opacity-90 hover:scale-[1.02] shadow-md hover:shadow-lg',
           style: {
-            backgroundColor: 'oklch(70% 0.12 220)', // Lighter blue (matches theme)
-            color: 'white',
-          },
-          className: 'hover:opacity-90 hover:scale-[1.02] shadow-md hover:shadow-lg'
+            backgroundColor: 'var(--color-secondary)',
+            color: 'var(--color-secondary-foreground)'
+          }
         };
       case "outline":
         return {
-          style: {},
-          className: 'bg-transparent text-primary border-2 border-primary hover:bg-primary/5 hover:scale-[1.02]'
+          className: 'bg-transparent hover:scale-[1.02]',
+          style: {
+            color: 'var(--color-primary)',
+            borderWidth: '2px',
+            borderColor: 'var(--color-primary)',
+            backgroundColor: 'transparent'
+          }
         };
     }
   };
@@ -52,8 +57,8 @@ const Button = ({
 
   return (
     <button
-      style={variantConfig.style}
       className={`${baseStyles} ${variantConfig.className} ${widthStyles} ${className}`}
+      style={variantConfig.style}
       {...props}
     >
       {Icon && <Icon className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />}

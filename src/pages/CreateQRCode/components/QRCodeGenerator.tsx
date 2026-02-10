@@ -2,8 +2,10 @@ import { useState, useCallback } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { Copy, Download, Check, QrCode } from "lucide-react";
 import Button from "@/commons/Button";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const QRCodeGenerator = () => {
+  const { theme } = useTheme();
   const [inputText, setInputText] = useState("");
   const [qrText, setQrText] = useState("");
   const [copied, setCopied] = useState(false);
@@ -59,7 +61,7 @@ const QRCodeGenerator = () => {
                 size={180}
                 level="M"
                 bgColor="transparent"
-                fgColor="hsl(220, 25%, 10%)"
+                fgColor={theme === "dark" ? "hsl(220, 25%, 90%)" : "hsl(220, 25%, 10%)"}
               />
             </div>
           ) : (

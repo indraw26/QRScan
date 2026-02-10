@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Moon, Palette, Bell, Shield, Download, RotateCcw } from "lucide-react";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface SettingToggleProps {
   icon: typeof Moon;
@@ -23,22 +24,25 @@ const SettingToggle = ({ icon: Icon, label, description, enabled, onToggle }: Se
         e.stopPropagation();
         onToggle();
       }}
+      className="relative w-10 h-[22px] rounded-full transition-all duration-300 cursor-pointer shadow-md"
       style={{
-        backgroundColor: enabled ? 'oklch(60% 0.18 220)' : 'oklch(95% 0.01 240)',
+        backgroundColor: enabled ? 'var(--color-primary)' : 'var(--color-muted)',
         boxShadow: enabled ? '0 8px 16px oklch(60% 0.18 220 / 0.3)' : 'none'
       }}
-      className="relative w-10 h-[22px] rounded-full transition-all duration-300 cursor-pointer"
     >
       <div
-        className={`absolute top-[3px] w-4 h-4 rounded-full bg-white shadow-md transition-all duration-300 ${enabled ? "translate-x-[22px] scale-110" : "translate-x-[3px]"
-          }`}
+        className="absolute top-[3px] w-4 h-4 rounded-full shadow-md transition-all duration-300"
+        style={{
+          backgroundColor: 'white',
+          transform: enabled ? 'translateX(22px) scale(1.1)' : 'translateX(3px)'
+        }}
       />
     </button>
   </div>
 );
 
 const SettingsPanel = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const { theme, toggleTheme } = useTheme();
   const [notifications, setNotifications] = useState(true);
   const [autoSave, setAutoSave] = useState(true);
   const [highRes, setHighRes] = useState(false);
@@ -50,8 +54,8 @@ const SettingsPanel = () => {
           icon={Moon}
           label="Dark Mode"
           description="Toggle dark appearance"
-          enabled={darkMode}
-          onToggle={() => setDarkMode(!darkMode)}
+          enabled={theme === "dark"}
+          onToggle={toggleTheme}
         />
       </div>
 
