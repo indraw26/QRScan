@@ -23,6 +23,12 @@ export default defineConfig({
     rollupOptions: {
       input: {
         index: resolve(__dirname, 'index.html'),
+        content: resolve(__dirname, 'public/content.ts'),
+      },
+      output: {
+        entryFileNames: (chunkInfo) => {
+          return chunkInfo.name === 'content' ? 'content.js' : 'assets/[name]-[hash].js';
+        },
       },
     },
   },

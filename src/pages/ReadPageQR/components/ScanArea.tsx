@@ -1,19 +1,70 @@
 import { useState } from "react";
-import { ScanLine, Camera, CheckCircle2, Loader2 } from "lucide-react";
+import { ScanLine, Camera, CheckCircle2, Loader2, Copy, Check } from "lucide-react";
 import Button from "@/commons/Button";
+import { useHistory } from "@/contexts/HistoryContext";
 
 type ScanState = "idle" | "scanning" | "done";
 
+interface QRResult {
+  content: string;
+  source: string;
+  alt: string;
+}
+
 const ScanArea = () => {
   const [scanState, setScanState] = useState<ScanState>("idle");
+  const [qrResults, setQrResults] = useState<QRResult[]>([]);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const { addToHistory } = useHistory();
 
-  const handleScan = () => {
+  const handleScan = async () => {
     if (scanState === "scanning") return;
     setScanState("scanning");
-    setTimeout(() => setScanState("done"), 3000);
+    setQrResults([]);
+
+    try {
+      // Get the active tab
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+      if (!tab.id) {
+        setScanState("done");
+        return;
+      }
+
+      // Send message to content script to scan the page
+      const results = await chrome.tabs.sendMessage(tab.id, { action: 'scanPage' });
+
+      setQrResults(results || []);
+
+      // Add to history if auto-save is enabled
+      if (results && results.length > 0) {
+        results.forEach((result: QRResult) => {
+          addToHistory(result.content, "scanned");
+        });
+      }
+
+      setScanState("done");
+    } catch (error) {
+      console.error("Scan error:", error);
+      setScanState("done");
+    }
   };
 
-  const handleReset = () => setScanState("idle");
+  const handleReset = () => {
+    setScanState("idle");
+    setQrResults([]);
+    setCopiedIndex(null);
+  };
+
+  const handleCopy = async (content: string, index: number) => {
+    try {
+      await navigator.clipboard.writeText(content);
+      setCopiedIndex(index);
+      setTimeout(() => setCopiedIndex(null), 2000);
+    } catch (error) {
+      console.error("Copy failed:", error);
+    }
+  };
 
   return (
     <div className="flex flex-col items-center gap-6 animate-fade-in px-5">
@@ -66,17 +117,53 @@ const ScanArea = () => {
           {scanState === "scanning"
             ? "Scanning Page..."
             : scanState === "done"
-              ? "Scan Complete"
+              ? qrResults.length > 0 ? `Found ${qrResults.length} QR Code${qrResults.length > 1 ? 's' : ''}` : "Scan Complete"
               : "Read Page QR Code"}
         </h2>
         <p className="text-xs text-muted-foreground leading-relaxed max-w-[260px]">
           {scanState === "scanning"
             ? "Analyzing page content for QR codes. Please wait..."
-            : scanState === "done"
+            : scanState === "done" && qrResults.length === 0
               ? "No QR codes were found on this page."
-              : "Scan QR codes found on the current web page. The extension will detect and decode them automatically."}
+              : scanState === "done"
+                ? "Click on any code below to copy its content."
+                : "Scan QR codes found on the current web page. The extension will detect and decode them automatically."}
         </p>
       </div>
+
+      {/* QR Results List */}
+      {scanState === "done" && qrResults.length > 0 && (
+        <div className="w-full max-w-[320px] space-y-2 animate-fade-in">
+          {qrResults.map((result, index) => (
+            <div
+              key={index}
+              className="glass-card flex items-center gap-3 group hover:scale-[1.01] transition-all"
+            >
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-blue-500/10 text-blue-500">
+                <ScanLine className="w-4 h-4" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium text-foreground truncate">
+                  {result.content}
+                </p>
+                <p className="text-[10px] text-muted-foreground truncate">
+                  {result.alt}
+                </p>
+              </div>
+              <button
+                onClick={() => handleCopy(result.content, index)}
+                className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-primary/10 transition-colors cursor-pointer"
+              >
+                {copiedIndex === index ? (
+                  <Check className="w-3.5 h-3.5 text-primary" />
+                ) : (
+                  <Copy className="w-3.5 h-3.5 text-primary/70 hover:text-primary" />
+                )}
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Scan / Reset button */}
       {scanState === "done" ? (

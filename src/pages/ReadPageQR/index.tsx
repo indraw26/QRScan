@@ -1,5 +1,4 @@
 import ScanArea from "./components/ScanArea";
-
 const ReadPageQR = () => {
   return (
     <div className="flex flex-col h-full">
