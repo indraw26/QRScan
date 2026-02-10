@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { ToastProvider, ToastViewport } from "@radix-ui/react-toast";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { HistoryProvider } from "./contexts/HistoryContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -13,13 +14,15 @@ const App = () => (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <ToastProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-          <ToastViewport />
+          <HistoryProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+            <ToastViewport />
+          </HistoryProvider>
         </ToastProvider>
       </TooltipProvider>
     </QueryClientProvider>

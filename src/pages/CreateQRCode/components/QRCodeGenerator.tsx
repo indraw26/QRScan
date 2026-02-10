@@ -2,15 +2,18 @@ import { useState, useCallback } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { Download, QrCode } from "lucide-react";
 import Button from "@/commons/Button";
+import { useHistory } from "@/contexts/HistoryContext";
 
 const QRCodeGenerator = () => {
   const [inputText, setInputText] = useState("");
   const [qrText, setQrText] = useState("");
+  const { addToHistory } = useHistory();
 
   const handleGenerate = useCallback(() => {
     if (!inputText.trim()) return;
     setQrText(inputText);
-  }, [inputText]);
+    addToHistory(inputText, "created");
+  }, [inputText, addToHistory]);
 
 
 
