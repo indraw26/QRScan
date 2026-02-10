@@ -1,26 +1,18 @@
 import { useState, useCallback } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import { Copy, Download, Check, QrCode } from "lucide-react";
+import { Download, QrCode } from "lucide-react";
 import Button from "@/commons/Button";
-import { useTheme } from "@/contexts/ThemeContext";
 
 const QRCodeGenerator = () => {
-  const { theme } = useTheme();
   const [inputText, setInputText] = useState("");
   const [qrText, setQrText] = useState("");
-  const [copied, setCopied] = useState(false);
 
   const handleGenerate = useCallback(() => {
     if (!inputText.trim()) return;
     setQrText(inputText);
   }, [inputText]);
 
-  const handleCopy = useCallback(() => {
-    if (!qrText) return;
-    navigator.clipboard.writeText(qrText);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }, [qrText]);
+
 
   const handleDownload = useCallback(() => {
     if (!qrText) return;
@@ -60,25 +52,17 @@ const QRCodeGenerator = () => {
                 value={qrText}
                 size={180}
                 level="M"
-                bgColor="transparent"
-                fgColor={theme === "dark" ? "hsl(220, 25%, 90%)" : "hsl(220, 25%, 10%)"}
+                bgColor="#ffffff"
+                fgColor="#000000"
               />
             </div>
           ) : (
             <div className="w-[180px] h-[180px] flex items-center justify-center">
               <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-primary/10 flex items-center justify-center">
-                  <svg className="w-8 h-8 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <rect x="3" y="3" width="7" height="7" rx="1" />
-                    <rect x="14" y="3" width="7" height="7" rx="1" />
-                    <rect x="3" y="14" width="7" height="7" rx="1" />
-                    <rect x="14" y="14" width="3" height="3" />
-                    <rect x="18" y="14" width="3" height="3" />
-                    <rect x="14" y="18" width="3" height="3" />
-                    <rect x="18" y="18" width="3" height="3" />
-                  </svg>
+                <div className="w-16 h-16 mx-auto mb-1 rounded-2xl bg-primary/10 flex items-center justify-center">
+                  <img src="/qr-icon.svg" alt="QR Icon" className="w-8 h-8 dark:invert dark:brightness-0 dark:contrast-200" />
                 </div>
-                <p className="text-xs text-muted-foreground">Enter text and click Generate</p>
+                <p className="text-xs text-muted-foreground dark:text-white">Enter text and click Generate</p>
               </div>
             </div>
           )}
@@ -94,7 +78,17 @@ const QRCodeGenerator = () => {
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
           placeholder="Enter URL, text, or any content..."
-          className="w-full h-24 px-4 py-3 rounded-xl border border-input bg-surface text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-ring/30 transition-all"
+          className="w-full h-24 px-4 py-3 rounded-xl border border-input bg-surface text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none transition-all"
+          style={{
+            '--tw-ring-color': 'var(--color-primary)',
+            '--tw-ring-opacity': '0.3'
+          } as React.CSSProperties}
+          onFocus={(e) => {
+            e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-primary, rgb(59 130 246 / 0.3))';
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.boxShadow = '';
+          }}
         />
       </div>
 
@@ -118,12 +112,13 @@ const QRCodeGenerator = () => {
       {qrText && (
         <div className="flex gap-3 px-5">
           <Button
-            onClick={handleCopy}
+            onClick={handleGenerate}
             variant="secondary"
-            icon={copied ? Check : Copy}
+            icon={QrCode}
             className="animate-stagger-1"
+            disabled={!inputText.trim()}
           >
-            {copied ? "Copied!" : "Copy Text"}
+            Regenerate QR Code
           </Button>
           <Button
             onClick={handleDownload}
@@ -136,20 +131,6 @@ const QRCodeGenerator = () => {
         </div>
       )}
 
-      {/* Regenerate button when text changes */}
-      {qrText && inputText !== qrText && inputText.trim() && (
-        <div className="px-5">
-          <Button
-            onClick={handleGenerate}
-            variant="outline"
-            icon={QrCode}
-            fullWidth
-            className="animate-fade-in"
-          >
-            Regenerate QR Code
-          </Button>
-        </div>
-      )}
     </div>
   );
 };

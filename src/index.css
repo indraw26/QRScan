@@ -177,8 +177,8 @@ body {
 }
 
 .dark .qr-display {
-  background-color: oklch(95% 0.005 240);
-  box-shadow: 0 0 0 1px var(--color-border), 0 4px 16px oklch(0% 0 0 / 0.3);
+  background-color: transparent;
+  box-shadow: 0 0 0 2px var(--color-border), 0 4px 16px oklch(0% 0 0 / 0.3);
 }
 
 /* Glow effect for primary actions */
