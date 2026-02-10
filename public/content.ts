@@ -10,62 +10,117 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 async function scanPageForQRCodes() {
-  const results = [];
-  const images = document.querySelectorAll('img');
+  const results: any[] = [];
+  const images = Array.from(document.querySelectorAll('img'));
+  const canvases = Array.from(document.querySelectorAll('canvas'));
   
+  // Process images
   for (const img of images) {
     try {
+      // Skip small icons/tracking pixels
+      if (img.width < 50 || img.height < 50) continue;
+
       const qrData = await decodeQRFromImage(img);
       if (qrData) {
-        results.push({
-          content: qrData,
-          source: img.src,
-          alt: img.alt || 'QR Code'
-        });
+        // Avoid duplicates
+        if (!results.some(r => r.content === qrData)) {
+          results.push({
+            content: qrData,
+            source: img.src,
+            alt: img.alt || 'QR Code'
+          });
+        }
       }
     } catch (error) {
-      // Skip images that can't be processed
-      console.debug('Failed to process image:', error);
+      // Quietly fail for individual images
+    }
+  }
+
+  // Process canvases
+  for (const canvas of canvases) {
+    try {
+      if (canvas.width < 50 || canvas.height < 50) continue;
+
+      const qrData = decodeQRFromCanvas(canvas);
+      if (qrData) {
+        if (!results.some(r => r.content === qrData)) {
+          results.push({
+            content: qrData,
+            source: canvas.toDataURL(), // Snapshot of the canvas
+            alt: 'Canvas QR Code'
+          });
+        }
+      }
+    } catch (error) {
+       // Quietly fail
     }
   }
   
   return results;
 }
 
-async function decodeQRFromImage(img) {
-  return new Promise((resolve) => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+function decodeQRFromCanvas(sourceCanvas: HTMLCanvasElement): string | null {
+  try {
+    const ctx = sourceCanvas.getContext('2d');
+    if (!ctx) return null;
     
-    // Wait for image to load if not already loaded
-    if (!img.complete) {
-      img.onload = () => processImage();
-      img.onerror = () => resolve(null);
-    } else {
-      processImage();
+    // Get image data directly from the canvas
+    const imageData = ctx.getImageData(0, 0, sourceCanvas.width, sourceCanvas.height);
+    const code = jsQR(imageData.data, imageData.width, imageData.height, {
+      inversionAttempts: 'dontInvert',
+    });
+    
+    return code ? code.data : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+async function decodeQRFromImage(img: HTMLImageElement): Promise<string | null> {
+  return new Promise((resolve) => {
+    // Create a temporary image to handle loading/CORS properly without messing with the DOM element
+    const tempImg = new Image();
+    
+    // Only set crossOrigin if it's not a data URL (though it doesn't hurt for data URLs)
+    if (!img.src.startsWith('data:')) {
+      tempImg.crossOrigin = "Anonymous";
     }
     
-    function processImage() {
+    tempImg.onload = () => {
       try {
-        canvas.width = img.naturalWidth || img.width;
-        canvas.height = img.naturalHeight || img.height;
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) { resolve(null); return; }
+
+        canvas.width = tempImg.naturalWidth;
+        canvas.height = tempImg.naturalHeight;
         
         if (canvas.width === 0 || canvas.height === 0) {
           resolve(null);
           return;
         }
         
-        ctx.drawImage(img, 0, 0);
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(tempImg, 0, 0);
         
-        const code = jsQR(imageData.data, imageData.width, imageData.height, {
-          inversionAttempts: 'dontInvert',
-        });
-        
-        resolve(code ? code.data : null);
-      } catch (error) {
+        try {
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const code = jsQR(imageData.data, imageData.width, imageData.height);
+          resolve(code ? code.data : null);
+        } catch {
+          // Canvas tainted (CORS failure)
+          resolve(null);
+        }
+      } catch {
         resolve(null);
       }
-    }
+    };
+    
+    tempImg.onerror = () => resolve(null);
+    
+    // Trigger load
+    tempImg.src = img.src;
+    
+    // Timeout if image takes too long
+    setTimeout(() => resolve(null), 2000);
   });
 }
