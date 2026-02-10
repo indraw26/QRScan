@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { ScanLine, Camera, CheckCircle2, Loader2, Copy, Check } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ScanLine, Camera, CheckCircle2, Loader2, Upload, ExternalLink, Copy, Check } from "lucide-react";
+import jsQR from "jsqr";
 import Button from "@/commons/Button";
 import { useHistory } from "@/contexts/HistoryContext";
 
@@ -14,62 +15,129 @@ interface QRResult {
 const ScanArea = () => {
   const [scanState, setScanState] = useState<ScanState>("idle");
   const [qrResults, setQrResults] = useState<QRResult[]>([]);
+  const [isDragging, setIsDragging] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const { addToHistory } = useHistory();
 
-  const handleScan = async () => {
-    if (scanState === "scanning") return;
-    setScanState("scanning");
-    setQrResults([]);
-
+  const isValidUrl = (string: string) => {
     try {
-      // Get the active tab
-      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      new URL(string);
+      return true;
+    } catch {
+      return string.startsWith('http://') || string.startsWith('https://') || string.startsWith('www.');
+    }
+  };
 
-      if (!tab.id) {
-        setScanState("done");
-        return;
+  const handleResultClick = async (content: string, index: number) => {
+    if (isValidUrl(content)) {
+      const url = content.startsWith('www.') ? `https://${content}` : content;
+      window.open(url, '_blank');
+    } else {
+      try {
+        await navigator.clipboard.writeText(content);
+        setCopiedIndex(index);
+        setTimeout(() => setCopiedIndex(null), 2000);
+      } catch (error) {
+        console.error("Copy failed:", error);
       }
-
-      // Send message to content script to scan the page
-      const results = await chrome.tabs.sendMessage(tab.id, { action: 'scanPage' });
-
-      setQrResults(results || []);
-
-      // Add to history if auto-save is enabled
-      if (results && results.length > 0) {
-        results.forEach((result: QRResult) => {
-          addToHistory(result.content, "scanned");
-        });
-      }
-
-      setScanState("done");
-    } catch (error) {
-      console.error("Scan error:", error);
-      setScanState("done");
     }
   };
 
   const handleReset = () => {
     setScanState("idle");
     setQrResults([]);
-    setCopiedIndex(null);
   };
 
-  const handleCopy = async (content: string, index: number) => {
-    try {
-      await navigator.clipboard.writeText(content);
-      setCopiedIndex(index);
-      setTimeout(() => setCopiedIndex(null), 2000);
-    } catch (error) {
-      console.error("Copy failed:", error);
+  const processFile = (file: File) => {
+    if (!file.type.startsWith('image/')) return;
+
+    setScanState("scanning");
+    setQrResults([]);
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        if (!ctx) {
+          setScanState("done");
+          return;
+        }
+
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+
+        try {
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+          if (code) {
+            const result: QRResult = {
+              content: code.data,
+              source: URL.createObjectURL(file),
+              alt: file.name
+            };
+            setQrResults([result]);
+            addToHistory(result.content, "scanned");
+          } else {
+            setQrResults([]);
+          }
+        } catch (error) {
+          console.error("Scan error:", error);
+        }
+        setScanState("done");
+      };
+      img.src = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      processFile(e.dataTransfer.files[0]);
     }
   };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      processFile(e.target.files[0]);
+    }
+  };
+
+  // Handle paste events
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      if (e.clipboardData && e.clipboardData.files.length > 0) {
+        const file = e.clipboardData.files[0];
+        if (file.type.startsWith('image/')) {
+          processFile(file);
+        }
+      }
+    };
+    window.addEventListener('paste', handlePaste);
+    return () => window.removeEventListener('paste', handlePaste);
+  }, []);
 
   return (
     <div className="flex flex-col items-center gap-6 animate-fade-in px-5">
       {/* Scan visualization */}
-      <div className="relative w-56 h-56 mt-4">
+      <div className="relative w-40 h-40 mt-4">
         {/* Corner markers */}
         <div className={`absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 rounded-tl-lg transition-colors duration-500 ${scanState === "scanning" ? "border-primary animate-pulse" : scanState === "done" ? "border-primary" : "border-primary"}`} />
         <div className={`absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 rounded-tr-lg transition-colors duration-500 ${scanState === "scanning" ? "border-primary animate-pulse" : "border-primary"}`} />
@@ -79,16 +147,16 @@ const ScanArea = () => {
         {/* Center icon */}
         <div className="absolute inset-0 flex items-center justify-center">
           {scanState === "done" ? (
-            <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center animate-scale-in">
-              <CheckCircle2 className="w-10 h-10 text-primary" strokeWidth={1.5} />
+            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center animate-scale-in">
+              <CheckCircle2 className="w-8 h-8 text-primary" strokeWidth={1.5} />
             </div>
           ) : scanState === "scanning" ? (
-            <div className="w-20 h-20 rounded-2xl bg-primary/5 flex items-center justify-center">
-              <Loader2 className="w-10 h-10 text-primary animate-spin" strokeWidth={1.5} />
+            <div className="w-16 h-16 rounded-2xl bg-primary/5 flex items-center justify-center">
+              <Loader2 className="w-8 h-8 text-primary animate-spin" strokeWidth={1.5} />
             </div>
           ) : (
-            <div className="w-20 h-20 rounded-2xl bg-muted flex items-center justify-center">
-              <Camera className="w-10 h-10 text-muted-foreground" strokeWidth={1.2} />
+            <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center">
+              <Camera className="w-8 h-8 text-muted-foreground" strokeWidth={1.2} />
             </div>
           )}
         </div>
@@ -115,21 +183,44 @@ const ScanArea = () => {
       <div className="text-center space-y-2">
         <h2 className="text-base font-semibold text-foreground">
           {scanState === "scanning"
-            ? "Scanning Page..."
+            ? "Decoding..."
             : scanState === "done"
               ? qrResults.length > 0 ? `Found ${qrResults.length} QR Code${qrResults.length > 1 ? 's' : ''}` : "Scan Complete"
-              : "Read Page QR Code"}
+              : "Scan QR Code"}
         </h2>
         <p className="text-xs text-muted-foreground leading-relaxed max-w-[260px]">
           {scanState === "scanning"
-            ? "Analyzing page content for QR codes. Please wait..."
+            ? "Processing image..."
             : scanState === "done" && qrResults.length === 0
-              ? "No QR codes were found on this page."
+              ? "No QR code found in the image."
               : scanState === "done"
                 ? "Click on any code below to copy its content."
-                : "Scan QR codes found on the current web page. The extension will detect and decode them automatically."}
+                : "Paste an image from clipboard (Ctrl+V) or drop an image file here to scan."}
         </p>
       </div>
+
+      {/* File Upload / Drag & Drop Area */}
+      {scanState === "idle" && (
+        <div
+          className={`w-full max-w-[280px] h-20 border-2 border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer transition-colors ${isDragging ? "border-primary bg-primary/5" : "border-border hover:border-primary/50 hover:bg-muted/50"}`}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          onClick={() => document.getElementById("file-upload")?.click()}
+        >
+          <input
+            type="file"
+            id="file-upload"
+            className="hidden"
+            accept="image/*"
+            onChange={handleFileChange}
+          />
+          <div className="flex flex-col items-center gap-1 text-muted-foreground">
+            <Upload className="w-5 h-5" />
+            <span className="text-xs">Drop image or click to upload</span>
+          </div>
+        </div>
+      )}
 
       {/* QR Results List */}
       {scanState === "done" && qrResults.length > 0 && (
@@ -137,7 +228,8 @@ const ScanArea = () => {
           {qrResults.map((result, index) => (
             <div
               key={index}
-              className="glass-card flex items-center gap-3 group hover:scale-[1.01] transition-all"
+              onClick={() => handleResultClick(result.content, index)}
+              className="glass-card flex items-center gap-3 group hover:scale-[1.01] transition-all cursor-pointer hover:bg-muted/50"
             >
               <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-blue-500/10 text-blue-500">
                 <ScanLine className="w-4 h-4" />
@@ -146,47 +238,34 @@ const ScanArea = () => {
                 <p className="text-xs font-medium text-foreground truncate">
                   {result.content}
                 </p>
-                <p className="text-[10px] text-muted-foreground truncate">
-                  {result.alt}
-                </p>
               </div>
-              <button
-                onClick={() => handleCopy(result.content, index)}
-                className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-primary/10 transition-colors cursor-pointer"
+              <div
+                className="w-7 h-7 rounded-lg flex items-center justify-center bg-primary/5 group-hover:bg-primary/10 transition-colors"
+                title={isValidUrl(result.content) ? "Open in new tab" : "Copy to clipboard"}
               >
                 {copiedIndex === index ? (
                   <Check className="w-3.5 h-3.5 text-primary" />
+                ) : isValidUrl(result.content) ? (
+                  <ExternalLink className="w-3.5 h-3.5 text-primary/70 group-hover:text-primary" />
                 ) : (
-                  <Copy className="w-3.5 h-3.5 text-primary/70 hover:text-primary" />
+                  <Copy className="w-3.5 h-3.5 text-primary/70 group-hover:text-primary" />
                 )}
-              </button>
+              </div>
             </div>
           ))}
         </div>
       )}
 
       {/* Scan / Reset button */}
-      {scanState === "done" ? (
+      {scanState === "done" && (
         <Button
           onClick={handleReset}
           variant="secondary"
           icon={ScanLine}
           fullWidth
-          className="max-w-[280px] h-12 animate-fade-in"
+          className="max-w-[280px] h-10 animate-fade-in"
         >
-          Scan Again
-        </Button>
-      ) : (
-        <Button
-          onClick={handleScan}
-          disabled={scanState === "scanning"}
-          variant="primary"
-          icon={scanState === "scanning" ? Loader2 : ScanLine}
-          isLoading={scanState === "scanning"}
-          fullWidth
-          className="max-w-[280px] h-12 disabled:opacity-70 disabled:cursor-not-allowed"
-        >
-          {scanState === "scanning" ? "Scanning..." : "Scan Current Page"}
+          Scan Another Image
         </Button>
       )}
 

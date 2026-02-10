@@ -1,4 +1,5 @@
-import { Globe, Heart, Github, Star, ExternalLink, Mail } from "lucide-react";
+import { useState } from "react";
+import { Globe, Heart, Github, ExternalLink, Mail } from "lucide-react";
 
 interface SocialLinkProps {
   href: string;
@@ -28,6 +29,7 @@ const SocialLink = ({ href, icon: Icon, label, sublabel, delay }: SocialLinkProp
 
 const ProfileCard = () => {
   const currentYear = new Date().getFullYear();
+  const [avatarSrc, setAvatarSrc] = useState("https://avatars.githubusercontent.com/u/126231069?s=96&v=4");
 
   return (
     <div className="flex flex-col items-center gap-6 px-5 pb-6 animate-fade-in">
@@ -36,8 +38,9 @@ const ProfileCard = () => {
         <div className="absolute -inset-1 bg-linear-to-br from-primary via-primary/50 to-transparent rounded-full opacity-20 blur-lg group-hover:opacity-40 transition-opacity duration-500" />
         <div className="w-24 h-24 rounded-full bg-linear-to-br from-background to-muted p-1 border border-white/10 shadow-xl relative z-10">
           <img
-            src="/icons/icon128.png"
-            alt="QR Scan Logo"
+            src={avatarSrc}
+            alt="Profile Avatar"
+            onError={() => setAvatarSrc("/icons/icon128.png")}
             className="w-full h-full rounded-full object-cover p-2 bg-linear-to-br from-primary/10 to-transparent"
           />
         </div>
@@ -77,29 +80,20 @@ const ProfileCard = () => {
           delay="animate-stagger-1"
         />
         <SocialLink
-          href="https://indrawijaya.dev" // Placeholder
+          href="https://portofolio-indrawijaya.netlify.app" // Placeholder
           icon={Globe}
           label="Developer Website"
           sublabel="See more projects"
           delay="animate-stagger-2"
         />
         <SocialLink
-          href="mailto:contact@indrawijaya.dev"
+          href="mailto:indrawijaya2400@gmail.com"
           icon={Mail}
           label="Contact Support"
           sublabel="Report a bug or suggestion"
           delay="animate-stagger-3"
         />
       </div>
-
-      {/* Rate Us Button */}
-      <a
-        href="#"
-        className="w-full max-w-[320px] py-3 rounded-xl bg-linear-to-r from-primary to-primary/80 text-primary-foreground font-medium text-sm flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all animate-stagger-4"
-      >
-        <Star className="w-4 h-4 fill-primary-foreground/20" />
-        Rate on Chrome Web Store
-      </a>
 
       {/* Footer */}
       <div className="mt-4 text-center">

@@ -44,9 +44,14 @@ const QRCodeGenerator = () => {
     img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData)));
   }, [qrText]);
 
+  const handleReset = useCallback(() => {
+    setInputText("");
+    setQrText("");
+  }, []);
+
   return (
     <div className="flex flex-col gap-5 animate-fade-in">
-      {/* QR Preview */}
+      {/* QR Preview Area */}
       <div className="flex justify-center pt-2">
         <div className="qr-display">
           {qrText ? (
@@ -76,32 +81,39 @@ const QRCodeGenerator = () => {
         </div>
       </div>
 
-      {/* Input */}
+      {/* Input Area */}
       <div className="px-5">
         <label className="text-xs font-medium text-muted-foreground mb-2 block">
           Content
         </label>
-        <textarea
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          placeholder="Enter URL, text, or any content..."
-          className="w-full h-24 px-4 py-3 rounded-xl border border-input bg-surface text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none transition-all"
-          style={{
-            '--tw-ring-color': 'var(--color-primary)',
-            '--tw-ring-opacity': '0.3'
-          } as React.CSSProperties}
-          onFocus={(e) => {
-            e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-primary, rgb(59 130 246 / 0.3))';
-          }}
-          onBlur={(e) => {
-            e.currentTarget.style.boxShadow = '';
-          }}
-        />
+        {qrText ? (
+          <div className="w-full h-24 px-4 py-3 rounded-xl border border-border bg-muted/50 text-sm text-foreground overflow-y-auto break-words animate-fade-in">
+            {qrText}
+          </div>
+        ) : (
+          <textarea
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            placeholder="Enter URL, text, or any content..."
+            className="w-full h-24 px-4 py-3 rounded-xl border border-input bg-surface text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none transition-all"
+            style={{
+              '--tw-ring-color': 'var(--color-primary)',
+              '--tw-ring-opacity': '0.3'
+            } as React.CSSProperties}
+            onFocus={(e) => {
+              e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-primary, rgb(59 130 246 / 0.3))';
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.boxShadow = '';
+            }}
+            autoFocus
+          />
+        )}
       </div>
 
-      {/* Generate Button */}
-      {!qrText && (
-        <div className="px-5">
+      {/* Actions */}
+      <div className="px-5 flex gap-3">
+        {!qrText ? (
           <Button
             onClick={handleGenerate}
             disabled={!inputText.trim()}
@@ -112,31 +124,27 @@ const QRCodeGenerator = () => {
           >
             Generate QR Code
           </Button>
-        </div>
-      )}
-
-      {/* Actions - only show when QR is generated */}
-      {qrText && (
-        <div className="flex gap-3 px-5">
-          <Button
-            onClick={handleGenerate}
-            variant="secondary"
-            icon={QrCode}
-            className="animate-stagger-1"
-            disabled={!inputText.trim()}
-          >
-            Regenerate QR Code
-          </Button>
-          <Button
-            onClick={handleDownload}
-            variant="primary"
-            icon={Download}
-            className="animate-stagger-2"
-          >
-            Download
-          </Button>
-        </div>
-      )}
+        ) : (
+          <>
+            <Button
+              onClick={handleReset}
+              variant="secondary"
+              icon={QrCode}
+              className="animate-stagger-1 flex-1"
+            >
+              New
+            </Button>
+            <Button
+              onClick={handleDownload}
+              variant="primary"
+              icon={Download}
+              className="animate-stagger-2 flex-1"
+            >
+              Download
+            </Button>
+          </>
+        )}
+      </div>
 
     </div>
   );
