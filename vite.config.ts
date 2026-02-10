@@ -20,12 +20,14 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
+    minify: 'esbuild',
     rollupOptions: {
       input: {
         index: resolve(__dirname, 'index.html'),
       },
       output: {
         entryFileNames: 'assets/[name]-[hash].js',
+        compact: true,
       },
     },
   },

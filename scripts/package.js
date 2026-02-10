@@ -51,8 +51,12 @@ async function packageExtension() {
   // Pipe archive data to the file
   archive.pipe(output);
 
-  // Add all files from dist directory
-  archive.directory(distPath, false);
+  // Add all files from dist directory at the root level (not in a 'dist' folder)
+  // This ensures manifest.json is at the root of the zip as Firefox requires
+  archive.glob('**/*', {
+    cwd: distPath,
+    dot: true
+  });
 
   // Finalize the archive
   await archive.finalize();
