@@ -10,9 +10,11 @@ export interface HistoryItem {
 
 interface HistoryContextType {
   historyItems: HistoryItem[];
+  autoSave: boolean;
   addToHistory: (content: string, type: "created" | "scanned") => void;
   deleteItem: (id: string) => void;
   clearHistory: () => void;
+  toggleAutoSave: () => void;
 }
 
 const HistoryContext = createContext<HistoryContextType | undefined>(undefined);
@@ -28,6 +30,16 @@ export const HistoryProvider = ({ children }: { children: ReactNode }) => {
     }
   });
 
+  const [autoSave, setAutoSave] = useState<boolean>(() => {
+    try {
+      const stored = localStorage.getItem("qr-autosave");
+      return stored !== null ? JSON.parse(stored) : true;
+    } catch (e) {
+      console.error("Failed to load autosave setting", e);
+      return true;
+    }
+  });
+
   useEffect(() => {
     try {
       localStorage.setItem("qr-history", JSON.stringify(historyItems));
@@ -36,7 +48,17 @@ export const HistoryProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [historyItems]);
 
+  useEffect(() => {
+    try {
+      localStorage.setItem("qr-autosave", JSON.stringify(autoSave));
+    } catch (e) {
+      console.error("Failed to save autosave setting", e);
+    }
+  }, [autoSave]);
+
   const addToHistory = (content: string, type: "created" | "scanned") => {
+    if (!autoSave) return;
+
     // Prevent duplicates for the same content and type if it was added recently?
     // For now, just add to top
     const newItem: HistoryItem = {
@@ -56,8 +78,12 @@ export const HistoryProvider = ({ children }: { children: ReactNode }) => {
     setHistoryItems([]);
   };
 
+  const toggleAutoSave = () => {
+    setAutoSave(prev => !prev);
+  };
+
   return (
-    <HistoryContext.Provider value={{ historyItems, addToHistory, deleteItem, clearHistory }}>
+    <HistoryContext.Provider value={{ historyItems, autoSave, addToHistory, deleteItem, clearHistory, toggleAutoSave }}>
       {children}
     </HistoryContext.Provider>
   );

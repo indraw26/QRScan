@@ -1,6 +1,6 @@
-import { useState } from "react";
 import { Moon, Download } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useHistory } from "@/contexts/HistoryContext";
 
 interface SettingToggleProps {
   icon: typeof Moon;
@@ -43,7 +43,7 @@ const SettingToggle = ({ icon: Icon, label, description, enabled, onToggle }: Se
 
 const SettingsPanel = () => {
   const { theme, toggleTheme } = useTheme();
-  const [autoSave, setAutoSave] = useState(true);
+  const { autoSave, toggleAutoSave } = useHistory();
 
   return (
     <div className="px-5 space-y-2 animate-fade-in">
@@ -63,7 +63,7 @@ const SettingsPanel = () => {
           label="Auto Save to History"
           description="Save all scans automatically"
           enabled={autoSave}
-          onToggle={() => setAutoSave(!autoSave)}
+          onToggle={toggleAutoSave}
         />
       </div>
     </div>
