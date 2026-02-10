@@ -99,12 +99,28 @@ A modern, feature-rich browser extension for generating and scanning QR codes wi
 
 ### Loading the Extension
 
+#### Chrome/Edge/Brave (Chromium-based browsers)
+
 1. Build the extension using `npm run build`
 2. Open your browser and navigate to `chrome://extensions/`
 3. Enable "Developer mode" (toggle in top-right corner)
 4. Click "Load unpacked"
 5. Select the `dist` folder from the project directory
 6. The extension icon should appear in your browser toolbar
+
+#### Firefox
+
+1. Build the extension using `npm run build:firefox`
+2. This creates a `qr-scanner-firefox.zip` file in the project root
+3. Open Firefox and navigate to `about:debugging#/runtime/this-firefox`
+4. Click "Load Temporary Add-on"
+5. Select the `manifest.json` file from the `dist` folder
+6. The extension will be loaded temporarily (for development)
+
+**For Firefox Add-ons Store Submission:**
+- Use the generated `qr-scanner-firefox.zip` file
+- Upload it to [Firefox Add-ons Developer Hub](https://addons.mozilla.org/developers/)
+- The package includes all necessary files and Firefox-specific manifest settings
 
 ## 🎯 Usage
 
@@ -198,8 +214,14 @@ The extension is built using Vite with optimized settings for browser extensions
 # Start development server with HMR
 npm run dev
 
-# Build for production
+# Build for production (Chrome/Edge/Brave)
 npm run build
+
+# Build and package for Firefox Add-ons store
+npm run build:firefox
+
+# Package existing build into zip (without rebuilding)
+npm run package
 
 # Preview production build
 npm run preview

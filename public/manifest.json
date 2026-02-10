@@ -3,6 +3,12 @@
   "name": "QR Scanner",
   "version": "1.0.0",
   "description": "Generate QR codes from text and URLs, and download them instantly",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "qr-scanner@indraw26.github.io",
+      "strict_min_version": "109.0"
+    }
+  },
   "action": {
     "default_popup": "index.html",
     "default_icon": {

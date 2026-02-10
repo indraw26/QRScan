@@ -8,7 +8,7 @@ import AboutMe from "@/pages/AboutMe";
 import Settings from "@/pages/Settings";
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState<TabId>("create");
+  const [activeTab, setActiveTab] = useState<TabId>("read");
 
   const renderContent = () => {
     switch (activeTab) {
