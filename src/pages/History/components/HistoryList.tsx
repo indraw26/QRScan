@@ -5,9 +5,8 @@ const HistoryList = () => {
   const { historyItems, deleteItem } = useHistory();
 
   const formatTime = (timestamp: number) => {
-    // ... existing formatTime code ...
     const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
-    const diff = (timestamp - Date.now()) / 1000 / 60; // difference in minutes
+    const diff = (timestamp - Date.now()) / 1000 / 60;
     if (Math.abs(diff) < 1) return "Just now";
     if (Math.abs(diff) < 60) return rtf.format(Math.round(diff), 'minute');
     if (Math.abs(diff) < 24 * 60) return rtf.format(Math.round(diff / 60), 'hour');

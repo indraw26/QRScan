@@ -33,7 +33,6 @@ const ProfileCard = () => {
 
   return (
     <div className="flex flex-col items-center gap-6 px-5 pb-6 animate-fade-in">
-      {/* Avatar Section */}
       <div className="relative mt-2 animate-scale-in group">
         <div className="absolute -inset-1 bg-linear-to-br from-primary via-primary/50 to-transparent rounded-full opacity-20 blur-lg group-hover:opacity-40 transition-opacity duration-500" />
         <div className="w-24 h-24 rounded-full bg-linear-to-br from-background to-muted p-1 border border-white/10 shadow-xl relative z-10">
@@ -49,7 +48,6 @@ const ProfileCard = () => {
         </div>
       </div>
 
-      {/* Info Section */}
       <div className="text-center space-y-2 animate-slide-up">
         <div>
           <h2 className="text-xl font-bold bg-linear-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">
@@ -70,7 +68,6 @@ const ProfileCard = () => {
         </p>
       </div>
 
-      {/* Social Links */}
       <div className="w-full max-w-[320px] space-y-3">
         <SocialLink
           href="https://github.com/indraw26/QRScan"
@@ -80,7 +77,7 @@ const ProfileCard = () => {
           delay="animate-stagger-1"
         />
         <SocialLink
-          href="https://portofolio-indrawijaya.netlify.app" // Placeholder
+          href="https://portofolio-indrawijaya.netlify.app"
           icon={Globe}
           label="Developer Website"
           sublabel="See more projects"
@@ -95,7 +92,6 @@ const ProfileCard = () => {
         />
       </div>
 
-      {/* Footer */}
       <div className="mt-4 text-center">
         <p className="text-[10px] text-muted-foreground/60">
           &copy; {currentYear} Indra Wijaya. Open Source.

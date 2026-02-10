@@ -120,7 +120,6 @@ const ScanArea = () => {
     }
   };
 
-  // Handle paste events
   useEffect(() => {
     const handlePaste = (e: ClipboardEvent) => {
       if (e.clipboardData && e.clipboardData.files.length > 0) {
@@ -136,15 +135,12 @@ const ScanArea = () => {
 
   return (
     <div className="flex flex-col items-center gap-6 animate-fade-in px-5">
-      {/* Scan visualization */}
       <div className="relative w-40 h-40 mt-4">
-        {/* Corner markers */}
         <div className={`absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 rounded-tl-lg transition-colors duration-500 ${scanState === "scanning" ? "border-primary animate-pulse" : scanState === "done" ? "border-primary" : "border-primary"}`} />
         <div className={`absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 rounded-tr-lg transition-colors duration-500 ${scanState === "scanning" ? "border-primary animate-pulse" : "border-primary"}`} />
         <div className={`absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 rounded-bl-lg transition-colors duration-500 ${scanState === "scanning" ? "border-primary animate-pulse" : "border-primary"}`} />
         <div className={`absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 rounded-br-lg transition-colors duration-500 ${scanState === "scanning" ? "border-primary animate-pulse" : "border-primary"}`} />
 
-        {/* Center icon */}
         <div className="absolute inset-0 flex items-center justify-center">
           {scanState === "done" ? (
             <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center animate-scale-in">
@@ -161,16 +157,13 @@ const ScanArea = () => {
           )}
         </div>
 
-        {/* Scanning line animation — only visible while scanning */}
         {scanState === "scanning" && (
           <div className="absolute inset-x-4 top-4 bottom-4 overflow-hidden rounded-lg">
             <div className="absolute inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent animate-scan-line" />
-            {/* Glow trail */}
             <div className="absolute inset-x-0 h-8 bg-gradient-to-b from-primary/10 to-transparent animate-scan-line" />
           </div>
         )}
 
-        {/* Corner pulse rings while scanning */}
         {scanState === "scanning" && (
           <>
             <div className="absolute -inset-2 rounded-2xl border border-primary/20 animate-ping-slow" />
@@ -179,7 +172,6 @@ const ScanArea = () => {
         )}
       </div>
 
-      {/* Info text */}
       <div className="text-center space-y-2">
         <h2 className="text-base font-semibold text-foreground">
           {scanState === "scanning"
@@ -199,7 +191,6 @@ const ScanArea = () => {
         </p>
       </div>
 
-      {/* File Upload / Drag & Drop Area */}
       {scanState === "idle" && (
         <div
           className={`w-full max-w-[280px] h-20 border-2 border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer transition-colors ${isDragging ? "border-primary bg-primary/5" : "border-border hover:border-primary/50 hover:bg-muted/50"}`}
@@ -222,7 +213,6 @@ const ScanArea = () => {
         </div>
       )}
 
-      {/* QR Results List */}
       {scanState === "done" && qrResults.length > 0 && (
         <div className="w-full max-w-[320px] space-y-2 animate-fade-in">
           {qrResults.map((result, index) => (
@@ -256,7 +246,6 @@ const ScanArea = () => {
         </div>
       )}
 
-      {/* Scan / Reset button */}
       {scanState === "done" && (
         <Button
           onClick={handleReset}
@@ -269,7 +258,6 @@ const ScanArea = () => {
         </Button>
       )}
 
-      {/* Progress bar while scanning */}
       {scanState === "scanning" && (
         <div className="w-full max-w-[280px] h-1 rounded-full bg-muted overflow-hidden animate-fade-in">
           <div className="h-full bg-primary rounded-full animate-scan-progress" />

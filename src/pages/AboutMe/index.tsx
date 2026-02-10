@@ -3,7 +3,6 @@ import ProfileCard from "./components/ProfileCard";
 const AboutMe = () => {
   return (
     <div className="flex flex-col h-full relative overflow-hidden">
-      {/* Background Patterns */}
       <div className="absolute top-[-20%] left-[-20%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-[-20%] right-[-20%] w-[50%] h-[50%] bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
 

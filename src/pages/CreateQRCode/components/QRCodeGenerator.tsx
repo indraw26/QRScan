@@ -51,7 +51,6 @@ const QRCodeGenerator = () => {
 
   return (
     <div className="flex flex-col gap-5 animate-fade-in">
-      {/* QR Preview Area */}
       <div className="flex justify-center pt-2">
         <div className="qr-display">
           {qrText ? (
@@ -81,7 +80,6 @@ const QRCodeGenerator = () => {
         </div>
       </div>
 
-      {/* Input Area */}
       <div className="px-5">
         <label className="text-xs font-medium text-muted-foreground mb-2 block">
           Content
@@ -111,7 +109,6 @@ const QRCodeGenerator = () => {
         )}
       </div>
 
-      {/* Actions */}
       <div className="px-5 flex gap-3">
         {!qrText ? (
           <Button

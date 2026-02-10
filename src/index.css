@@ -4,7 +4,6 @@
 @variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* Border radius */
   --radius-sm: 0.5rem;
   --radius: 0.75rem;
   --radius-md: 0.75rem;
@@ -12,18 +11,15 @@
   --radius-xl: 1.5rem;
   --radius-2xl: 2rem;
 
-  /* Extension-specific custom properties */
   --extension-width: 420px;
   --extension-height: 600px;
   --tab-bar-height: 64px;
   --header-height: 56px;
 
-  /* Font family */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 :root {
-  /* Light mode color palette */
   --color-background: oklch(97% 0.01 240);
   --color-foreground: oklch(20% 0.02 240);
 
@@ -52,7 +48,6 @@
   --color-input: oklch(90% 0.01 240);
   --color-ring: oklch(60% 0.18 220);
 
-  /* Custom surface colors */
   --color-surface: oklch(99% 0.005 240);
   --color-surface-hover: oklch(95% 0.01 240);
   --color-surface-active: oklch(94% 0.05 200);
@@ -61,7 +56,6 @@
 
 
 .dark {
-  /* Dark mode color palette */
   --color-background: oklch(15% 0.01 240);
   --color-foreground: oklch(95% 0.01 240);
 
@@ -90,7 +84,6 @@
   --color-input: oklch(28% 0.01 240);
   --color-ring: oklch(65% 0.20 220);
 
-  /* Custom surface colors for dark mode */
   --color-surface: oklch(20% 0.01 240);
   --color-surface-hover: oklch(25% 0.01 240);
   --color-surface-active: oklch(30% 0.05 220);
@@ -110,7 +103,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Extension container styles */
 .extension-container {
   @apply mx-auto overflow-hidden flex flex-col;
   background-color: var(--color-background);
@@ -171,7 +163,6 @@ body {
   box-shadow: 0 4px 12px oklch(20% 0.02 240 / 0.08);
 }
 
-/* QR Code display area */
 .qr-display {
   @apply flex items-center justify-center rounded-2xl p-6;
   background-color: white;
@@ -183,7 +174,6 @@ body {
   box-shadow: 0 0 0 2px var(--color-border), 0 4px 16px oklch(0% 0 0 / 0.3);
 }
 
-/* Glow effect for primary actions */
 .glow-button {
   box-shadow: 0 0 20px oklch(from var(--color-glow) l c h / 0.2), 0 4px 12px oklch(from var(--color-glow) l c h / 0.15);
 }
@@ -192,7 +182,6 @@ body {
   box-shadow: 0 0 30px oklch(from var(--color-glow) l c h / 0.3), 0 6px 16px oklch(from var(--color-glow) l c h / 0.2);
 }
 
-/* Smooth Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -359,7 +348,6 @@ body {
   animation: stagger3 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.15s backwards;
 }
 
-/* Smooth transitions for all interactive elements */
 button,
 a,
 input,
@@ -368,17 +356,14 @@ select {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Smooth hover transitions */
 .transition-smooth {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Page transition wrapper */
 .page-transition {
   animation: fadeIn 0.3s ease-out;
 }
 
-/* Radix UI Toast Styling */
 [data-radix-toast-viewport] {
   position: fixed;
   bottom: 0;
@@ -430,15 +415,13 @@ select {
   line-height: 1.3;
 }
 
-/* Hide scrollbar for Chrome, Safari and Opera */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 [data-radix-toast-action] {
@@ -460,7 +443,6 @@ select {
   background-color: var(--color-surface-hover);
 }
 
-/* Toast animations */
 @keyframes slideIn {
   from {
     transform: translateX(calc(100% + 1.5rem));
